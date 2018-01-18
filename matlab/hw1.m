@@ -104,5 +104,5 @@ function du = sinc_resample(dn,xn,xu)
     
     X = 1; % always spaced by 1
     E = sinc((xn - xu.')/X);
-    du = E.'\dn(:);
+    du = E.'\dn.';
 end
