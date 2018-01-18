@@ -59,7 +59,7 @@ legend('Recovered','Original','Bunched Samples');
 
 %% (3) Random Samples
 % Choose random samples from the sinc interpolated signal
-ndx = randsample(1:length(di),41);
+ndx = randsample(1:length(di),50);
 dr = di(ndx);
 xr = xi(ndx);
 
@@ -78,6 +78,43 @@ xlabel('x');
 ylabel('s(x)');
 title('Random Samples and sinc resampling');
 legend('Recovered','Original','Random Samples');
+
+%% (4) Interpolators
+
+figure(4);
+% Pick a couple of interesting random samples and plot the results
+dp1 = zeros(1,length(dr));
+dp1(floor(end/4)) = 1;
+dp1u = sinc_resample(dp1,xr,x);
+
+dp2 = zeros(1,length(dr));
+dp2(floor(3*end/4)) = 1;
+dp2u = sinc_resample(dp2,xr,x);
+
+subplot(2,1,1);
+stem(xr,ones(1,length(xr)));
+hold on;
+plot(xi,sinc_interp(dp1u.',x,xi));
+plot(xi,sinc_interp(dp2u.',x,xi));
+title('Random Sampling Interpolators');
+
+% There are only two interpolators for the bunched samples case
+dp1 = zeros(1,length(db));
+dp1(end/4) = 1;
+dp1u = sinc_resample(dp1,xb,x);
+
+dp2 = zeros(1,length(db));
+dp2(3*end/4) = 1;
+dp2u = sinc_resample(dp2,xb,x);
+
+subplot(2,1,2);
+stem(xb,ones(1,length(xb)));
+hold on;
+plot(xi,sinc_interp(dp1u.',x,xi));
+plot(xi,sinc_interp(dp2u.',x,xi));
+title('Bunched Sampling Interpolators');
+
+%% (5) Signal Noise and Sample Timing Jitter
 
 function di = sinc_interp(d,x,xi)
     %
