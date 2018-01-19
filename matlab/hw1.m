@@ -115,6 +115,68 @@ plot(xi,sinc_interp(dp2u.',x,xi));
 title('Bunched Sampling Interpolators');
 
 %% (5) Signal Noise and Sample Timing Jitter
+% First consider noise (error in sampled values) and 50 random samples
+drn = dr + 0.25*randn(size(dr)); % noise, sigma=.25
+du = sinc_resample(drn,xr,x);
+
+figure(5);
+subplot(2,1,1);
+plot(xi,di,'k'); % ground truth
+hold on;
+stem(x,du,'k'); % uniform samples
+plot(xr,drn,'r.'); % random samples, with noise
+title('50 Noisy Random Samples');
+legend('Original','Uniform Resampled','Random Samples');
+xlabel('This didn''t work so well...');
+
+% Now try with 100 random samples
+ndx = randsample(1:length(di),100);
+dr = di(ndx);
+xr = xi(ndx);
+
+drn = dr + 0.25*randn(size(dr));
+du = sinc_resample(drn,xr,x);
+
+subplot(2,1,2);
+plot(xi,di,'k');
+hold on;
+stem(x,du,'k');
+plot(xr,drn,'r.');
+title('100 Noisy Random Samples');
+legend('Original','Uniform Resampled','Random Samples');
+xlabel('Oversampling did a lot better!');
+
+% Now let's consider the effects of uncertainty in the timing of the
+% sampling (jitter)
+xrn = xr + 0.05*randn(size(xr)); % sigma=0.05
+du = sinc_resample(dr,xrn,x);
+
+figure(6);
+subplot(2,1,2);
+plot(xi,di,'k'); % ground truth
+hold on;
+stem(x,du,'k'); % uniform samples
+plot(xrn,dr,'r.'); % random samples, with jitter
+title('Jitter, 100 Random Samples');
+legend('Original','Uniform Resampled','Random Samples');
+xlabel('Again, pretty terrible...');
+
+% Back to 50 random samples
+ndx = randsample(1:length(di),50);
+dr = di(ndx);
+xr = xi(ndx);
+
+xrn = xr + 0.05*randn(size(xr)); % sigma=0.05
+du = sinc_resample(dr,xrn,x);
+
+subplot(2,1,1);
+plot(xi,di,'k'); % ground truth
+hold on;
+stem(x,du,'k'); % uniform samples
+plot(xrn,dr,'r.'); % random samples, with jitter
+title('Jitter, 50 Random Samples');
+legend('Original','Uniform Resampled','Random Samples');
+xlabel('Oversampling did a lot better!');
 
 function di = sinc_interp(d,x,xi)
     %
