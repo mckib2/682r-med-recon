@@ -125,6 +125,26 @@ if __name__ == '__main__':
     ax.legend()
     plt.title('Random Samples and sinc resampling')
     plt.draw()
+
+    ## (4) Intepolators
+    fig4 = plt.figure()
+
+    # Pick a couple of interesting random samples and plot the results
+    dp1 = np.zeros(len(dr))
+    idx = int(np.floor((len(dp1)-1)/4))
+    dp1[idx] = 1
+    dp1u = sinc_resample(dp1,xr,x)
+
+    dp2 = np.zeros(len(dr))
+    idx = int(np.floor(3*(len(dp2)-1)/4))
+    dp2[idx] = 1
+    dp2u = sinc_resample(dp2,xr,x)
+
+    ax = fig4.add_subplot(211)
+    plt.stem(xr,np.ones(len(xr)))
+    plt.plot(xi,sinc_interp(dp1u,x,xi))
+    plt.plot(xi,sinc_interp(dp2u,x,xi))
+    plt.title('Random Sampling Interpolators')
     
     # Show all the plots
     plt.show()
