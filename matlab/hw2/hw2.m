@@ -34,11 +34,9 @@ title('2x k-space oversampling');
 %% (3) Deapodization Correction
 % x = linspace(1/min(real(k(:))),1/max(real(k(:))),n*o);
 % y = linspace(1/min(imag(k(:))),1/max(imag(k(:))),n*o);
-x = linspace(-2,2,n*o);
+x = linspace(-1/2,1/2,n*o);
 y = x;
-dx = x(2) - x(1);
-dy = y(2) - y(1);
-c = sinc(x*dx).^2'*sinc(y*dy).^2;
+c = sinc(x).^2'*sinc(y).^2;
 
 im4 = im3./c;
 subplot(2,2,4);
