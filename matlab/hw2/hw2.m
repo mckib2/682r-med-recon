@@ -32,10 +32,7 @@ imshow(abs(im3(end/4:3*end/4-1,end/4:3*end/4-1)),[]);
 title('2x k-space oversampling');
 
 %% (3) Deapodization Correction
-% x = linspace(1/min(real(k(:))),1/max(real(k(:))),n*o);
-% y = linspace(1/min(imag(k(:))),1/max(imag(k(:))),n*o);
-x = linspace(-1/2,1/2,n*o);
-y = x;
+x = linspace(-1/2,1/2,n*o); y = x;
 c = sinc(x).^2'*sinc(y).^2;
 
 im4 = im3./c;
@@ -58,15 +55,25 @@ plot(abs(im3_sl - im4_sl));
 title('Difference of the two');
 
 %% (4) Improved Kernel
-W = 5; % from Beatty paper
+W = 5;
 beta = pi*sqrt(((W/o)*(o - 1/2))^2 - 0.8);
-m5 = grid1(d,k,w,n,o,[W,beta]);
-im5 = ifftshift(ifft2(m5));
+im5 = grid1(d,k,w,n,o,[W,1e-6]);
 
 figure(3);
 subplot(2,1,1);
 kernel = kaiser(n*o,beta);
 plot(x,kernel);
+title('Kasier-Bessel Kernel');
+
+subplot(2,1,2);
+plot(abs(im5(floor(3*end/5),end/4:3*end/4)));
+title('Slice to show Apodization correction');
 
 figure(4);
+subplot(2,1,1);
 imshow(abs(im5),[]);
+title('Kasier-Bessel Kernel, Deappodization')
+
+subplot(2,1,2);
+imshow(abs(im5(2*n/4:3*2*n/4,n*2/4:3*n*2/4)),[]);
+title('1x');
