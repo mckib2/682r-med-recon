@@ -1,4 +1,4 @@
-function [ m,p ] = gridkb(d,k,w,n,osf,wg,opt)
+function [ m,p,da ] = gridkb(d,k,w,n,osf,wg,opt)
 
 % function m = gridkb(d,k,w,n,osf,kw,opt)
 %
@@ -86,14 +86,6 @@ end
 m(:,1) = 0; m(:,osf*n) = 0;
 m(1,:) = 0; m(osf*n,:) = 0;
 
-% stop here, if we just want the k-space data
-if strcmp(opt,'k-space')
-    return;
-end
-
-im = fftshift(fft2(fftshift(m)));
-
-
 % compute deappodization function
 x = (-osf*n/2:osf*n/2-1)/(n);
 sqa = sqrt(pi*pi*kw*kw*x.*x-beta*beta);
@@ -102,6 +94,13 @@ dax = sin(sqa)./(sqa);
 dax = dax/dax(osf*n/2);
 % make it a 2D array
 da = dax'*dax;
+
+% stop here, if we just want the k-space data
+if strcmp(opt,'k-space')
+    return;
+end
+
+im = fftshift(fft2(fftshift(m)));
 
 % deappodize
 im = im./da;
